@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>PDF 横並びビューア</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="bar">
+  <button id="open" type="button">PDFを開く</button>
+  <span id="status" role="status"></span>
+  <div class="seg" role="group" aria-label="表示モード">
+    <button id="m2" type="button" aria-pressed="true">2ページ</button>
+    <button id="m3" type="button" aria-pressed="false">3ページ</button>
+  </div>
+</header>
+
+<main>
+  <p id="empty">「PDFを開く」からファイルを選んでください</p>
+  <div id="grid"></div>
+</main>
+
+<input id="file" type="file" accept="application/pdf,.pdf" hidden>
+
+<script src="app.js"></script>
+</body>
+</html>
