@@ -1,0 +1,151 @@
+:root {
+  --cols: 2;          /* JS が 2 / 3 に切り替える */
+  --ar: 1.4142;       /* 1ページ目の 高さ/幅（JS が設定） */
+  --gap: 6px;         /* app.js の GAP と合わせる */
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  background: #fff;
+  color: #111;
+  font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---- 上部バー ---- */
+#bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  row-gap: 6px;
+  padding: calc(6px + env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) 6px max(8px, env(safe-area-inset-left));
+  background: #fff;
+  border-bottom: 1px solid #e4e4e4;
+  touch-action: manipulation;
+}
+
+#bar button {
+  height: 32px;
+  padding: 0 12px;
+  font: inherit;
+  color: #111;
+  background: #fff;
+  border: 1px solid #c9c9c9;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+#bar button:disabled { opacity: .4; }
+
+#open {
+  font-weight: 600;
+  color: #fff !important;
+  background: #0a6cf0 !important;
+  border-color: #0a6cf0 !important;
+}
+
+.seg { display: flex; }
+.seg button:first-child { border-radius: 8px 0 0 8px; }
+.seg button:last-child  { border-radius: 0 8px 8px 0; margin-left: -1px; }
+.seg button[aria-pressed="true"] {
+  color: #fff !important;
+  background: #111 !important;
+  border-color: #111 !important;
+}
+
+#exportBtn { margin-left: auto; }
+
+#status {
+  flex: 1 1 100%;
+  order: 10;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #777;
+}
+#status.err { color: #c62828; }
+
+/* ---- 初回セットアップ / オフライン準備の案内バナー ---- */
+#offlineBanner {
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-bottom: 1px solid transparent;
+}
+#offlineBanner.info { color: #555;    background: #f4f4f4; border-color: #e2e2e2; }
+#offlineBanner.ok   { color: #1b5e20; background: #e9f7ec; border-color: #cdeed4; }
+#offlineBanner.err  { color: #7a5200; background: #fff6e0; border-color: #f0dca0; }
+
+/* ---- 右下の小さなオンライン/オフライン表示（邪魔にならない程度） ---- */
+#netPill {
+  position: fixed;
+  right: max(8px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  padding: 3px 8px;
+  font-size: 10px;
+  color: #777;
+  background: rgba(255,255,255,.85);
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 5;
+}
+#netPill.offline { color: #7a5200; background: rgba(255,246,224,.9); border-color: #f0dca0; }
+
+/* ---- 空の状態 ---- */
+#empty {
+  margin: 0;
+  padding: 30vh 24px 0;
+  text-align: center;
+  color: #888;
+}
+
+/* ---- ページ一覧 ---- */
+#grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  gap: var(--gap);
+  padding: 6px max(6px, env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+.cell {
+  position: relative;
+  background: #f3f3f3;
+  box-shadow: 0 0 0 1px #dcdcdc;
+  overflow: hidden;
+}
+/* 高さは 幅 × --ar。全ページ 1ページ目と同じ比率の枠で確保（レイアウトがずれない） */
+.cell::before {
+  content: "";
+  display: block;
+  padding-top: calc(var(--ar) * 100%);
+}
+.cell > .n {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #bdbdbd;
+}
+.cell > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* ページ寸法が違っても枠内に収める */
+}
